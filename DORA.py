@@ -194,7 +194,11 @@ def find_center(*relevant_parameters):
     c = data["index"]
 
     #Make a ticks vector that spans the total number of frames
-    tix = np.linspace(frame_start,frame_end,8)
+    if frame_end == -1:
+        last_frame = len(pre_data.iloc[:,0])
+    else:
+        last_frame = frame_end
+    tix = np.linspace(frame_start,last_frame,8)
     tix_1 = np.round(tix,0)
 
 
