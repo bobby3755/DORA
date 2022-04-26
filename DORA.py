@@ -194,8 +194,9 @@ def find_center(*relevant_parameters):
     c = data["index"]
 
     #Make a ticks vector that spans the total number of frames
-    if frame_end == -1:
-        last_frame = len(pre_data.iloc[:,0])
+    # There is a bug because linspace doesn't understand what -1 is but the sequence does
+    if frame_end == -1:   # negative 1
+        last_frame = pre_data.iloc[:,0].iat[-1] #in the index column, give me the last valid value --> this is the max Frames
     else:
         last_frame = frame_end
     tix = np.linspace(frame_start,last_frame,8)
@@ -520,9 +521,9 @@ def graph(plot_type, *graph_parameters):
             y_unit = 6
         # assign values of x y and z
         # move this outside this block to apply for all "none"
-        x = df.iloc[frame_start:frame_end, x_unit]
-        y = df.iloc[frame_start:frame_end, y_unit]
-        z = df.iloc[frame_start:frame_end, 7]  # col 7 is the time col
+        x = df.iloc[:, x_unit]
+        y = df.iloc[:, y_unit]
+        z = df.iloc[:, 7]  # col 7 is the time col
 
         # graph either
         if plot_type == "2D":
@@ -543,7 +544,12 @@ def graph(plot_type, *graph_parameters):
             c = df["index"]
 
             #Make a ticks vector that spans the total number of frames
-            tix = np.linspace(frame_start,frame_end,8)
+            # There is a bug because linspace doesn't understand what -1 is but the sequence does
+            if frame_end == -1:   # negative 1
+                last_frame = df["index"].iat[-1] #in the index column, give me the last valid value --> this is the max Frames
+            else:
+                last_frame = frame_end
+            tix = np.linspace(frame_start,last_frame,8)
             tix_1 = np.round(tix,0)
 
 
@@ -642,7 +648,7 @@ def graph(plot_type, *graph_parameters):
             # the number 00086.csv is the peak --> so this code takes the peak number
             pk = os.path.splitext(file_name)[0]
 
-            graph_type = '2D_Map'
+            graph_type = '3D_Map'
 
             # change title order!!! 
             list_of_strings = [graph_type, exp_tag, pk]
@@ -696,9 +702,9 @@ def graph(plot_type, *graph_parameters):
             y_unit = 6
         # assign values of x y and z
         # move this outside this block to apply for all "none"
-        x = df.iloc[frame_start:frame_end, x_unit]
-        y = df.iloc[frame_start:frame_end, y_unit]
-        z = df.iloc[frame_start:frame_end, 7]  # col 7 is the time col
+        x = df.iloc[:, x_unit]
+        y = df.iloc[:, y_unit]
+        z = df.iloc[:, 7]  # col 7 is the time col
         
         # unpack list xy_goodbad into respective outputs
         x_good, y_good, x_bad, y_bad = xy_goodbad
@@ -725,7 +731,12 @@ def graph(plot_type, *graph_parameters):
             c = df["index"]
 
             #Make a ticks vector that spans the total number of frames
-            tix = np.linspace(frame_start,frame_end,8)
+            # There is a bug because linspace doesn't understand what -1 is but the sequence does
+            if frame_end == -1:   # negative 1
+                last_frame = df["index"].iat[-1] #in the index column, give me the last valid value --> this is the max Frames
+            else:
+                last_frame = frame_end
+            tix = np.linspace(frame_start,last_frame,8)
             tix_1 = np.round(tix,0)
 
             #scatter plot with a color vector
@@ -841,10 +852,10 @@ def graph(plot_type, *graph_parameters):
             # the number 00086.csv is the peak --> so this code takes the peak number
             pk = os.path.splitext(file_name)[0]
 
-            graph_type = 'Accumulation of Angle (degrees) as a function of Time (ms)'
+            graph_type = 'Find_Sus_Angle'
 
             # change title order!!! 
-            list_of_strings = [exp_tag, pk]
+            list_of_strings = [graph_type, exp_tag, pk]
 
             #in quotes is the the delimiter between the items in the string
             # by default it is a _ 
